@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple JS Notes</title>
+  </head>
+  <body>
+  <textarea rows="4" id="note-input"></textarea>
+    <div>
+      <ul id="note-list">
+      </ul>
+    </div>
+    <script>
+      var input = document.getElementById("note-input");
+      var noteList = document.getElementById("note-list");
+
+      document.addEventListener("keypress", function(evt) {
+          if (evt.charCode === 13) {
+            // if plain enter
+            if (!evt.shiftKey) {
+              evt.preventDefault();
+              if (insertNote(input.value)) {
+                input.value = "";
+                return;
+              }
+            }
+          }
+          input.value = input.value + String.fromCharCode(evt.charCode);
+      });
+
+      function insertNote(note) {
+        note = note.trim();
+        if (note.length === 0) {
+          return false;
+        }
+        var node = document.createElement("li");
+        node.appendChild(document.createTextNode(note));
+        noteList.insertBefore(node, noteList.firstChild);
+        return true;
+      }
+    </script>
+  </body>
+</html>
