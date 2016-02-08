@@ -2,9 +2,42 @@
 <html>
   <head>
     <title>Simple JS Notes</title>
+    <style>
+      body {
+        width: 100%;
+        margin: 0 auto;
+        font-family: sans-serif;
+      }
+      #note-input {
+        resize: none;
+        padding: 20px;
+        border: 0;
+        transition: box-shadow 0.2s, border 0.3s;
+        display: block;
+        margin: 5px auto;
+        width: 99%;
+        font-family: sans-serif;
+        font-size: 18px;
+        appearance: none;
+        box-shadow: none;
+        border-radius: none;
+        box-sizing: border-box;
+      }
+      #note-input:focus {
+        border: solid 1px #dcdcdc;
+        box-shadow: 0 0 20px 3px #969696;
+      }
+      .striked {
+        color: rgba(0, 0, 0, 0.3);
+        text-decoration: line-through;
+      }
+      #note-list {
+        list-style-type: none;
+      }
+    </style>
   </head>
   <body>
-  <textarea rows="4" id="note-input"></textarea>
+  <textarea rows="2" id="note-input"></textarea>
     <div>
       <ul id="note-list">
       </ul>
@@ -14,7 +47,9 @@
       var noteList = document.getElementById("note-list");
 
       document.addEventListener("keypress", function(evt) {
-          if (evt.charCode === 13) {
+          // focus input
+          input.focus();
+          if (evt.keyCode === 13) {
             // if plain enter
             if (!evt.shiftKey) {
               evt.preventDefault();
@@ -24,16 +59,28 @@
               }
             }
           }
-          input.value = input.value + String.fromCharCode(evt.charCode);
       });
 
+      noteList.addEventListener("change", function(evt) {
+          evt.srcElement.labels[0].classList.toggle("striked");
+      });
+
+      var noteCount = 0;
       function insertNote(note) {
         note = note.trim();
         if (note.length === 0) {
           return false;
         }
+        noteCount++;
+        var checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.id = "note-" + noteCount;
+        var label = document.createElement("label");
+        label.htmlFor = "note-" + noteCount;
+        label.appendChild(document.createTextNode(note));
         var node = document.createElement("li");
-        node.appendChild(document.createTextNode(note));
+        node.appendChild(checkbox);
+        node.appendChild(label);
         noteList.insertBefore(node, noteList.firstChild);
         return true;
       }
